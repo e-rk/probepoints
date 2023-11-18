@@ -71,6 +71,18 @@ config:
         - locspec: "*0x005017aa"
           values:
             - *result_st0
+    - name: "traction_drag"
+      points:
+        - locspec: "*0x004ffb2e"
+          values:
+            - *local_linear_velocity_x
+            - *local_linear_velocity_y
+            - *local_linear_velocity_z
+        - locspec: "*0x004ffbba"
+          values:
+            - name: "result"
+              expr: "*((float*)($ebp - 0x20))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
