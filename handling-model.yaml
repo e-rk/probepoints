@@ -3,7 +3,7 @@ pre-config:
     - "target remote :11111"
     - "set pagination off"
 config:
-  timeout: 600
+  timeout: 240
   collect:
     - name: "handling_model_torque_curve"
       points:
