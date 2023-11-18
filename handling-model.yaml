@@ -1,0 +1,22 @@
+pre-config:
+  commands:
+    - "target remote :11111"
+    - "set pagination off"
+config:
+  timeout: 600
+  collect:
+    - name: "handling_model_torque_curve"
+      points:
+        - locspec: "*0x004fdac0"
+          values:
+            - name: "rpm"
+              expr: "$edx"
+              format: "%u"
+        - locspec: "*0x004fdbec"
+          values:
+            - name: "torque"
+              expr: "$st0"
+              format: "%f"
+post-config:
+  commands:
+    - "continue"
