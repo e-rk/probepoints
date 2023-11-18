@@ -17,6 +17,30 @@ config:
             - name: "torque"
               expr: "$st0"
               format: "%f"
+    - name: "something_with_ang_vel"
+      points:
+        - locspec: "*0x00502f0c"
+          values:
+            - name: "velocity_local"
+              expr: "*((float*)($eax + 0x4f4))"
+              format: "%f"
+            - name: "angular_velocity"
+              expr: "*((float*)($eax + 0x5c))"
+              format: "%f"
+            - name: "gear"
+              expr: "*((uint8_t*)($eax + 0x453))"
+              format: "%u"
+            - name: "inertia_inv"
+              expr: "*((float*)($eax + 0x74))"
+              format: "%f"
+            - name: "mass"
+              expr: "*((float*)($eax + 0x20))"
+              format: "%f"
+        - locspec: "*0x00502f31"
+          values:
+            - name: "result"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
