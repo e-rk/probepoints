@@ -41,6 +41,30 @@ config:
             - name: "result"
               expr: "$st0"
               format: "%f"
+    - name: "steering_angle"
+      points:
+        - locspec: "*0x005014e0"
+          values:
+            - name: "linear_velocity_x"
+              expr: "*((float*)($eax + 0x434))"
+              format: "%f"
+            - name: "linear_velocity_y"
+              expr: "*((float*)($eax + 0x438))"
+              format: "%f"
+            - name: "linear_velocity_z"
+              expr: "*((float*)($eax + 0x43c))"
+              format: "%f"
+            - name: "turn_angle"
+              expr: "*((uint32_t*)($eax + 0x464))"
+              format: "%d"
+            - name: "handbrake"
+              expr: "*((uint8_t*)($eax + 0x455))"
+              format: "%u"
+        - locspec: "*0x005017aa"
+          values:
+            - name: "result"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
