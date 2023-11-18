@@ -14,57 +14,63 @@ config:
               format: "%u"
         - locspec: "*0x004fdbec"
           values:
-            - name: "torque"
+            - &result_st0
+              name: "result"
               expr: "$st0"
               format: "%f"
     - name: "something_with_ang_vel"
       points:
         - locspec: "*0x00502f0c"
           values:
-            - name: "velocity_local"
-              expr: "*((float*)($eax + 0x4f4))"
+            - &local_linear_velocity_x
+              name: "linear_velocity_x"
+              expr: "*((float*)($eax + 0x434))"
               format: "%f"
-            - name: "angular_velocity"
+            - &local_linear_velocity_y
+              name: "linear_velocity_y"
+              expr: "*((float*)($eax + 0x438))"
+              format: "%f"
+            - &local_linear_velocity_z
+              name: "linear_velocity_z"
+              expr: "*((float*)($eax + 0x43c))"
+              format: "%f"
+            - &global_angular_velocity_y
+              name: "angular_velocity_y"
               expr: "*((float*)($eax + 0x5c))"
               format: "%f"
-            - name: "gear"
+            - &current_gear
+              name: "gear"
               expr: "*((uint8_t*)($eax + 0x453))"
               format: "%u"
-            - name: "inertia_inv"
+            - &inertia_inv_y
+              name: "inertia_inv_y"
               expr: "*((float*)($eax + 0x74))"
               format: "%f"
-            - name: "mass"
+            - &mass
+              name: "mass"
               expr: "*((float*)($eax + 0x20))"
               format: "%f"
         - locspec: "*0x00502f31"
           values:
-            - name: "result"
-              expr: "$st0"
-              format: "%f"
+            - *result_st0
     - name: "steering_angle"
       points:
         - locspec: "*0x005014e0"
           values:
-            - name: "linear_velocity_x"
-              expr: "*((float*)($eax + 0x434))"
-              format: "%f"
-            - name: "linear_velocity_y"
-              expr: "*((float*)($eax + 0x438))"
-              format: "%f"
-            - name: "linear_velocity_z"
-              expr: "*((float*)($eax + 0x43c))"
-              format: "%f"
-            - name: "turn_angle"
+            - *local_linear_velocity_x
+            - *local_linear_velocity_y
+            - *local_linear_velocity_z
+            - &turn_angle
+              name: "turn_angle"
               expr: "*((uint32_t*)($eax + 0x464))"
               format: "%d"
-            - name: "handbrake"
+            - &handbrake
+              name: "handbrake"
               expr: "*((uint8_t*)($eax + 0x455))"
               format: "%u"
         - locspec: "*0x005017aa"
           values:
-            - name: "result"
-              expr: "$st0"
-              format: "%f"
+            - *result_st0
 post-config:
   commands:
     - "continue"
