@@ -9,7 +9,8 @@ config:
       points:
         - locspec: "*0x004fdac0"
           values:
-            - name: "rpm"
+            - &rpm_arg_edx
+              name: "rpm"
               expr: "$edx"
               format: "%u"
         - locspec: "*0x004fdbec"
@@ -83,6 +84,18 @@ config:
             - name: "result"
               expr: "*((float*)($ebp - 0x20))"
               format: "%f"
+    - name: "traction_drivetrain"
+      points:
+        - locspec: "*0x004fffc3"
+          values:
+            - *rpm_arg_edx
+            - *current_gear
+        - locspec: "*0x0050005d"
+          values:
+            - name: "result"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+
 post-config:
   commands:
     - "continue"
