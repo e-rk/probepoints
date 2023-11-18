@@ -110,12 +110,12 @@ config:
             - name: "wheel_steering"
               expr: "*((float*)($edx + 0xc))"
               format: "%f"
-            - name: "wheel_some_velocity_value_x"
-              expr: "*((float*)($edx + 0x10))"
-              format: "%f"
-            - name: "wheel_some_velocity_value_z"
-              expr: "*((float*)($edx + 0x18))"
-              format: "%f"
+            - *local_linear_velocity_x
+            - *local_linear_velocity_y
+            - *local_linear_velocity_z
+            - *global_angular_velocity_y
+            - *mass
+            - *inertia_inv_y
             - name: "wheel_traction"
               expr: "*((float*)($edx))"
               format: "%f"
