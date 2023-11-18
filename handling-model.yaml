@@ -96,6 +96,48 @@ config:
               expr: "*((float*)($ebp - 0x44))"
               format: "%f"
 
+    - name: "wheel_force_calculations"
+      points:
+        - locspec: "*0x00500f20"
+          values:
+            - &surface_type
+              name: "surface_type"
+              expr: "*((uint32_t*)($eax + 0xe0))"
+              format: "%u"
+            - name: "lateral_grip"
+              expr: "*((float*)($edx + 0x4))"
+              format: "%f"
+            - name: "wheel_steering"
+              expr: "*((float*)($edx + 0xc))"
+              format: "%f"
+            - name: "wheel_some_velocity_value_x"
+              expr: "*((float*)($edx + 0x10))"
+              format: "%f"
+            - name: "wheel_some_velocity_value_z"
+              expr: "*((float*)($edx + 0x18))"
+              format: "%f"
+            - name: "wheel_traction"
+              expr: "*((float*)($edx))"
+              format: "%f"
+            - *current_gear
+            - &throttle
+              name: "throttle"
+              expr: "*((float*)($eax + 0x550))"
+              format: "%f"
+            - *handbrake
+            - name: "wheel_is_front"
+              expr: "*((uint32_t*)($edx + 0x28))"
+              format: "%u"
+            - *turn_angle
+        - locspec: "*0x00501450"
+          values:
+            - name: "lateral_force"
+              expr: "*((float*)($eax + 0x1c))"
+              format: "%f"
+            - name: "longitudal_force"
+              expr: "*((float*)($eax + 0x24))"
+              format: "%f"
+
 post-config:
   commands:
     - "continue"
