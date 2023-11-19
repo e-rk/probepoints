@@ -286,6 +286,21 @@ config:
         - locspec: "*0x005021d9"
           values:
             - *result_st0
+    - name: "wheel_surface_factor"
+      points:
+        - locspec: "*0x004ff705"
+          values:
+            - *road_basis_normal_y
+        - locspec: "*0x004ff85c"
+          values:
+            - name: "road_surface"
+              expr: "$eax"
+              format: "%d"
+        - locspec: "*0x004ff815"
+          values:
+            - name: "result"
+              expr: "*((float*)($eax + 0x528))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
