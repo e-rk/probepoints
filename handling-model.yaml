@@ -229,28 +229,36 @@ config:
       points:
         - locspec: "*0x00501fe8"
           values:
-            - name: "wheel_0_longitudal_force"
+            - &handling_model_wheel_0_longitudal_force
+              name: "wheel_0_longitudal_force"
               expr: "*((float*)($ebp - 0xa6))"
               format: "%f"
-            - name: "wheel_1_longitudal_force"
+            - &handling_model_wheel_1_longitudal_force
+              name: "wheel_1_longitudal_force"
               expr: "*((float*)($ebp - 0x76))"
               format: "%f"
-            - name: "wheel_2_longitudal_force"
+            - &handling_model_wheel_2_longitudal_force
+              name: "wheel_2_longitudal_force"
               expr: "*((float*)($ebp - 0x46))"
               format: "%f"
-            - name: "wheel_3_longitudal_force"
+            - &handling_model_wheel_3_longitudal_force
+              name: "wheel_3_longitudal_force"
               expr: "*((float*)($ebp - 0x16))"
               format: "%f"
-            - name: "wheel_0_lateral_force"
+            - &handling_model_wheel_0_lateral_force
+              name: "wheel_0_lateral_force"
               expr: "*((float*)($ebp - 0xae))"
               format: "%f"
-            - name: "wheel_1_lateral_force"
+            - &handling_model_wheel_1_lateral_force
+              name: "wheel_1_lateral_force"
               expr: "*((float*)($ebp - 0x7e))"
               format: "%f"
-            - name: "wheel_2_lateral_force"
+            - &handling_model_wheel_2_lateral_force
+              name: "wheel_2_lateral_force"
               expr: "*((float*)($ebp - 0x4e))"
               format: "%f"
-            - name: "wheel_3_lateral_force"
+            - &handling_model_wheel_3_lateral_force
+              name: "wheel_3_lateral_force"
               expr: "*((float*)($ebp - 0x1e))"
               format: "%f"
             - &local_linear_acceleration_x
@@ -261,6 +269,23 @@ config:
               name: "local_linear_acceleration_z"
               expr: "*((float*)($eax + 0x428 + 0x8))"
               format: "%f"
+    - name: "wheel_forces_to_angular_acceleration"
+      points:
+        - locspec: "*0x00501fe8"
+          values:
+            - *handling_model_wheel_0_longitudal_force
+            - *handling_model_wheel_1_longitudal_force
+            - *handling_model_wheel_2_longitudal_force
+            - *handling_model_wheel_3_longitudal_force
+            - *handling_model_wheel_0_lateral_force
+            - *handling_model_wheel_1_lateral_force
+            - *handling_model_wheel_2_lateral_force
+            - *handling_model_wheel_3_lateral_force
+            - *mass
+            - *inertia_inv_y
+        - locspec: "*0x005021d9"
+          values:
+            - *result_st0
 post-config:
   commands:
     - "continue"
