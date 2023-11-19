@@ -301,6 +301,36 @@ config:
             - name: "result"
               expr: "*((float*)($eax + 0x528))"
               format: "%f"
+    - name: "wheel_downforce_factor"
+      points:
+        - locspec: "*0x004ffa1a"
+          force_capture: true
+          values:
+            - *local_linear_velocity_z
+            - &wheel_0_downforce_factor
+              name: "wheel_0_downforce_factor"
+              expr: "*((float*)($eax + 0x518))"
+              format: "%f"
+            - &wheel_1_downforce_factor
+              name: "wheel_1_downforce_factor"
+              expr: "*((float*)($eax + 0x51c))"
+              format: "%f"
+            - &wheel_2_downforce_factor
+              name: "wheel_2_downforce_factor"
+              expr: "*((float*)($eax + 0x520))"
+              format: "%f"
+            - &wheel_3_downforce_factor
+              name: "wheel_3_downforce_factor"
+              expr: "*((float*)($eax + 0x524))"
+              format: "%f"
+        - locspec: "*0x004ff9b6"
+          force_capture: true
+          values:
+            - *local_linear_velocity_z
+            - *wheel_0_downforce_factor
+            - *wheel_1_downforce_factor
+            - *wheel_2_downforce_factor
+            - *wheel_3_downforce_factor
 post-config:
   commands:
     - "continue"
