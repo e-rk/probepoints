@@ -179,6 +179,30 @@ config:
         - locspec: "*0x00501268"
           values:
             - *result_st0
+    - name: "wheel_turned_steering_acceleration"
+      points:
+        - locspec: "*0x00501221"
+          values:
+            - name: "lateral_grip"
+              expr: "*((float*)($eax + 0x4))"
+              format: "%f"
+            - name: "wheel_is_front"
+              expr: "*((uint32_t*)($eax + 0x28))"
+              format: "%u"
+        - locspec: "*0x0050123b"
+          values:
+            - *current_gear
+            - *global_angular_velocity_y
+            - *local_linear_velocity_x
+            - *local_linear_velocity_y
+            - *local_linear_velocity_z
+            - *mass
+            - *inertia_inv_y
+            - *turn_angle
+            - *handbrake
+        - locspec: "*0x00501268"
+          values:
+            - *result_st0
 post-config:
   commands:
     - "continue"
