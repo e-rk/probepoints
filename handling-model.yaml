@@ -137,7 +137,48 @@ config:
             - name: "longitudal_force"
               expr: "*((float*)($eax + 0x24))"
               format: "%f"
-
+    - name: "wheel_resistance"
+      points:
+        - locspec: "*0x00501efc"
+          values:
+            - *local_linear_velocity_x
+            - *local_linear_velocity_y
+            - *local_linear_velocity_z
+            - *global_angular_velocity_y
+            - *mass
+            - *inertia_inv_y
+            - *current_gear
+            - name: "result_lateral"
+              expr: "*((float*)($edx + 0x10))"
+              format: "%f"
+            - name: "result_longitudal"
+              expr: "*((float*)($edx + 0x18))"
+              format: "%f"
+            - name: "wheel_is_front"
+              expr: "*((uint32_t*)($edx + 0x28))"
+              format: "%u"
+    - name: "wheel_steering_acceleration"
+      points:
+        - locspec: "*0x00501221"
+          values:
+            - name: "lateral_grip"
+              expr: "*((float*)($eax + 0x4))"
+              format: "%f"
+            - name: "wheel_is_front"
+              expr: "*((uint32_t*)($eax + 0x28))"
+              format: "%u"
+            - name: "result_lateral"
+              expr: "*((float*)($eax + 0x10))"
+              format: "%f"
+            - name: "result_longitudal"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+        - locspec: "*0x0050123b"
+          values:
+            - *current_gear
+        - locspec: "*0x00501268"
+          values:
+            - *result_st0
 post-config:
   commands:
     - "continue"
