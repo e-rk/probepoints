@@ -203,6 +203,28 @@ config:
         - locspec: "*0x00501268"
           values:
             - *result_st0
+    - name: "wheel_forces_sloped"
+      points:
+        - locspec: "*0x00501f35"
+          values:
+            - &road_basis_normal_y
+              name: "road_basis_normal_y"
+              expr: "*((float*)($edx + 0x148 + 0xc + 0x4))"
+              format: "%f"
+            - name: "wheel_lateral_force"
+              expr: "*((float*)($ebp + $eax - 0xae))"
+              format: "%f"
+            - name: "result_lateral"
+              expr: "$st0"
+              format: "%f"
+        - locspec: "*0x00501f5b"
+          values:
+            - name: "wheel_longitudal_force"
+              expr: "*((float*)($ebp + $eax - 0xa6))"
+              format: "%f"
+            - name: "result_longitudal"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
