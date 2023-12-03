@@ -51,6 +51,10 @@ config:
               name: "mass"
               expr: "*((float*)($eax + 0x20))"
               format: "%f"
+            - &airborne_counter
+              name: "airborne_counter"
+              expr: "*((uint16_t*)($eax + 0x1a4))"
+              format: "%d"
         - locspec: "*0x00502f31"
           values:
             - *result_st0
@@ -58,6 +62,7 @@ config:
       points:
         - locspec: "*0x005014e0"
           values:
+            - *airborne_counter
             - *local_linear_velocity_x
             - *local_linear_velocity_y
             - *local_linear_velocity_z
@@ -129,6 +134,7 @@ config:
               expr: "*((uint32_t*)($edx + 0x28))"
               format: "%u"
             - *turn_angle
+            - *airborne_counter
         - locspec: "*0x00501450"
           values:
             - name: "lateral_force"
@@ -147,6 +153,7 @@ config:
             - *global_angular_velocity_y
             - *mass
             - *inertia_inv_y
+            - *airborne_counter
             - *current_gear
             - name: "result_lateral"
               expr: "*((float*)($edx + 0x10))"
@@ -175,6 +182,7 @@ config:
               format: "%f"
         - locspec: "*0x0050123b"
           values:
+            - *airborne_counter
             - *current_gear
         - locspec: "*0x00501268"
           values:
@@ -199,6 +207,7 @@ config:
             - *mass
             - *inertia_inv_y
             - *turn_angle
+            - *airborne_counter
             - *handbrake
         - locspec: "*0x00501268"
           values:
