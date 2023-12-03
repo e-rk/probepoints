@@ -21,7 +21,7 @@ config:
               format: "%f"
     - name: "something_with_ang_vel"
       points:
-        - locspec: "*0x00502f0c"
+        - locspec: "*0x00502e70"
           values:
             - &local_linear_velocity_x
               name: "linear_velocity_x"
