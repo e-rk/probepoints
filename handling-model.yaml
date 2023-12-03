@@ -331,6 +331,37 @@ config:
             - *wheel_1_downforce_factor
             - *wheel_2_downforce_factor
             - *wheel_3_downforce_factor
+    - name: "wheel_longitudal_force"
+      points:
+        - locspec: "*0x00500f20"
+          values:
+            - *current_gear
+            - *throttle
+            - *handbrake
+            - *local_linear_velocity_x
+            - *local_linear_velocity_z
+        - locspec: "*0x00500f9f"
+          values:
+            - name: "wheel_traction"
+              expr: "*((float*)($eax))"
+              format: "%f"
+            - name: "result_lateral"
+              expr: "*((float*)($eax + 0x10))"
+              format: "%f"
+            - name: "result_longitudal"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+            - name: "wheel_is_front"
+              expr: "*((uint32_t*)($eax + 0x28))"
+              format: "%u"
+            - name: "lateral_grip"
+              expr: "*((float*)($eax + 0x4))"
+              format: "%f"
+        - locspec: "*0x0050140a"
+          values:
+            - name: "longitudal_force"
+              expr: "*((float*)($eax))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
