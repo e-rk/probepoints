@@ -398,6 +398,54 @@ config:
             - name: "result_longitudal"
               expr: "*((float*)($eax + 0x24))"
               format: "%f"
+    - name: "turning_circle"
+      points:
+        - locspec: "*0x005022e6"
+          values:
+            - *throttle
+            - &brake
+              name: "brake"
+              expr: "*((float*)($eax + 0x54c))"
+              format: "%f"
+            - *turn_angle
+            - *local_linear_velocity_x
+            - *local_linear_velocity_z
+            - *local_linear_velocity_y
+            - &local_angular_velocity_y
+              name: "angular_velocity_y"
+              expr: "*((float*)($eax + 0x444))"
+              format: "%f"
+            - *current_gear
+            - &global_linear_velocity_x
+              name: "global_linear_velocity_x"
+              expr: "*((float*)($eax + 0x14))"
+              format: "%f"
+            - &global_linear_velocity_y
+              name: "global_linear_velocity_y"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+            - &global_linear_velocity_z
+              name: "global_linear_velocity_z"
+              expr: "*((float*)($eax + 0x1c))"
+              format: "%f"
+            - &slip_angle
+              name: "slip_angle"
+              expr: "*((float*)($eax + 0x500))"
+              format: "%f"
+        - locspec: "*0x005022fd"
+          values:
+            - name: "result_global_linear_velocity_x"
+              expr: "*((float*)($eax + 0x14))"
+              format: "%f"
+            - name: "result_global_linear_velocity_y"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+            - name: "result_global_linear_velocity_z"
+              expr: "*((float*)($eax + 0x1c))"
+              format: "%f"
+            - name: "result_angular_velocity_y"
+              expr: "*((float*)($eax + 0x444))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
