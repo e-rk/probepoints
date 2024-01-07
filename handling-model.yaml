@@ -384,12 +384,24 @@ config:
             - name: "longitudal_force"
               expr: "*((float*)($eax + 0x24))"
               format: "%f"
+            - name: "lateral_grip"
+              expr: "*((float*)($eax + 0x4))"
+              format: "%f"
         - locspec: "*0x00500b6a"
           values:
             - *surface_type
             - *local_linear_velocity_x
             - *local_linear_velocity_z
             - *current_gear
+            - *throttle
+            - &rpm
+              name: "rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+            - &road_surface_type
+              name: "road_surface_type"
+              expr: "*((uint32_t*)($eax + 0x1d8))"
+              format: "%u"
         - locspec: "*0x00500e4d"
           values:
             - name: "result_lateral"
