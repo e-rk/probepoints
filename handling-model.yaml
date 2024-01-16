@@ -458,6 +458,42 @@ config:
             - name: "result_angular_velocity_y"
               expr: "*((float*)($eax + 0x444))"
               format: "%f"
+    - name: "traction_model"
+      points:
+        - locspec: "*0x004ffa20"
+          values:
+            - *throttle
+            - *rpm
+            - *handbrake
+            - *local_linear_velocity_z
+            - *current_gear
+            - *surface_type
+            - *slip_angle
+            - *brake
+            - &unknown_engine_value
+              name: "unknown_engine_value"
+              expr: "*((uint8_t*)($eax + 0x454))"
+              format: "%u"
+            - &unknown_engine_value_2
+              name: "unknown_engine_value2"
+              expr: "*((uint8_t*)($eax + 0x456))"
+              format: "%u"
+        - locspec: "*0x005006da"
+          values:
+            - name: "result_gear"
+              expr: "*((uint8_t*)($eax + 0x453))"
+              format: "%u"
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+            - name: "result_handbrake"
+              expr: "*((uint8_t*)($eax + 0x455))"
+              format: "%u"
+        - locspec: "*0x00500744"
+          values:
+            - name: "result_force"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
