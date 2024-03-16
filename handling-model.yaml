@@ -494,6 +494,13 @@ config:
             - name: "result_force"
               expr: "$st0"
               format: "%f"
+      name: "longitudal_drag_coefficient"
+      points:
+        - locspec: "*0x004fd54f"
+          values:
+            - name: "longitudal_drag_coefficient"
+              expr: "*((float*)($eax + 0x4d8))"
+              format: "%1.20f"
 post-config:
   commands:
     - "continue"
