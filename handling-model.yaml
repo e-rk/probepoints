@@ -494,14 +494,14 @@ config:
             - name: "result_force"
               expr: "$st0"
               format: "%f"
-      name: "longitudal_drag_coefficient"
+    - name: "longitudal_drag_coefficient"
       points:
         - locspec: "*0x004fd54f"
           values:
             - name: "longitudal_drag_coefficient"
               expr: "*((float*)($eax + 0x4d8))"
               format: "%1.20f"
-      name: "damp_velocity_when_neutral"
+    - name: "damp_velocity_when_neutral"
       points:
         - locspec: "*0x00502de4"
           values:
@@ -576,6 +576,16 @@ config:
               format: "%f"
             - name: "result_global_angular_velocity_z"
               expr: "*((float*)($ebx + 0x8))"
+              format: "%f"
+    - name: "damp_lateral_velocity"
+      points:
+        - locspec: "*0x00502852"
+          values:
+            - *local_linear_velocity_x
+        - locspec: "*0x005028ed"
+          values:
+            - name: "result_local_linear_velocity_x"
+              expr: "*((float*)($eax + 0x434))"
               format: "%f"
 post-config:
   commands:
