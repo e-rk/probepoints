@@ -587,6 +587,24 @@ config:
             - name: "result_local_linear_velocity_x"
               expr: "*((float*)($eax + 0x434))"
               format: "%f"
+    - name: "process_steering_input"
+      points:
+        - locspec: "*0x004ff157"
+          values:
+            - name: "unknown_value"
+              expr: "*((uint32_t*)($eax + 0x218 + 0x2c))"
+              format: "%u"
+            - name: "steering_input"
+              expr: "*((int32_t*)($eax + 0x460))"
+              format: "%d"
+            - name: "current_steering"
+              expr: "*((int32_t*)($eax + 0x464))"
+              format: "%d"
+        - locspec: "*0x004ff295"
+          values:
+            - name: "result_current_steering"
+              expr: "*((int32_t*)($eax + 0x464))"
+              format: "%d"
 post-config:
   commands:
     - "continue"
