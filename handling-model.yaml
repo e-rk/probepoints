@@ -216,7 +216,7 @@ config:
       points:
         - locspec: "*0x00501f35"
           values:
-            - &road_basis_normal_y
+            - &edx_road_basis_normal_y
               name: "road_basis_normal_y"
               expr: "*((float*)($edx + 0x148 + 0xc + 0x4))"
               format: "%f"
@@ -299,7 +299,7 @@ config:
       points:
         - locspec: "*0x004ff705"
           values:
-            - *road_basis_normal_y
+            - *edx_road_basis_normal_y
         - locspec: "*0x004ff85c"
           values:
             - name: "road_surface"
@@ -501,6 +501,82 @@ config:
             - name: "longitudal_drag_coefficient"
               expr: "*((float*)($eax + 0x4d8))"
               format: "%1.20f"
+      name: "damp_velocity_when_neutral"
+      points:
+        - locspec: "*0x00502de4"
+          values:
+            - *current_gear
+            - &road_basis_right_x
+              name: "road_basis_right_x"
+              expr: "*((float*)($eax + 0x148 + 0x0 + 0x0))"
+              format: "%f"
+            - &road_basis_right_y
+              name: "road_basis_right_y"
+              expr: "*((float*)($eax + 0x148 + 0x0 + 0x4))"
+              format: "%f"
+            - &road_basis_right_z
+              name: "road_basis_right_z"
+              expr: "*((float*)($eax + 0x148 + 0x0 + 0x8))"
+              format: "%f"
+            - &road_basis_normal_x
+              name: "road_basis_normal_x"
+              expr: "*((float*)($eax + 0x148 + 0xc + 0x0))"
+              format: "%f"
+            - &road_basis_normal_y
+              name: "road_basis_normal_y"
+              expr: "*((float*)($eax + 0x148 + 0xc + 0x4))"
+              format: "%f"
+            - &road_basis_normal_z
+              name: "road_basis_normal_z"
+              expr: "*((float*)($eax + 0x148 + 0xc + 0x8))"
+              format: "%f"
+            - &road_basis_forward_x
+              name: "road_basis_forward_x"
+              expr: "*((float*)($eax + 0x148 + 0x18 + 0x0))"
+              format: "%f"
+            - &road_basis_forward_y
+              name: "road_basis_forward_y"
+              expr: "*((float*)($eax + 0x148 + 0x18 + 0x4))"
+              format: "%f"
+            - &road_basis_forward_z
+              name: "road_basis_forward_z"
+              expr: "*((float*)($eax + 0x148 + 0x18 + 0x8))"
+              format: "%f"
+            - *local_linear_velocity_z
+            - *global_linear_velocity_x
+            - *global_linear_velocity_y
+            - *global_linear_velocity_z
+            - &global_angular_velocity_x
+              name: "global_angular_velocity_x"
+              expr: "*((float*)($eax + 0x58))"
+              format: "%f"
+            - *global_angular_velocity_y
+            - &global_angular_velocity_z
+              name: "global_angular_velocity_z"
+              expr: "*((float*)($eax + 0x60))"
+              format: "%f"
+        - locspec: "*0x00502e42"
+          values:
+            - name: "result_global_linear_velocity_x"
+              expr: "*((float*)($ebx + 0x0))"
+              format: "%f"
+            - name: "result_global_linear_velocity_y"
+              expr: "*((float*)($ebx + 0x4))"
+              format: "%f"
+            - name: "result_global_linear_velocity_z"
+              expr: "*((float*)($ebx + 0x8))"
+              format: "%f"
+        - locspec: "*0x00502e69"
+          values:
+            - name: "result_global_angular_velocity_x"
+              expr: "*((float*)($ebx + 0x0))"
+              format: "%f"
+            - name: "result_global_angular_velocity_y"
+              expr: "*((float*)($ebx + 0x4))"
+              format: "%f"
+            - name: "result_global_angular_velocity_z"
+              expr: "*((float*)($ebx + 0x8))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
