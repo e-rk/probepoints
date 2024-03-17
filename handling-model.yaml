@@ -605,6 +605,50 @@ config:
             - name: "result_current_steering"
               expr: "*((int32_t*)($eax + 0x464))"
               format: "%d"
+    - name: "near_stop_deceleration"
+      points:
+        - locspec: "*0x00501aa8"
+          values:
+            - *road_basis_right_x
+            - *road_basis_right_y
+            - *road_basis_right_z
+            - *road_basis_normal_x
+            - *road_basis_normal_y
+            - *road_basis_normal_z
+            - *road_basis_forward_x
+            - *road_basis_forward_y
+            - *road_basis_forward_z
+            - *local_linear_velocity_z
+            - *throttle
+            - *airborne_counter
+            - *brake
+            - *current_gear
+            - *global_linear_velocity_x
+            - *global_linear_velocity_y
+            - *global_linear_velocity_z
+            - *global_angular_velocity_x
+            - *global_angular_velocity_y
+            - *global_angular_velocity_z
+        - locspec: "*0x00501ab0"
+          values:
+            - name: "result_global_linear_velocity_x"
+              expr: "*((float*)($eax + 0x14))"
+              format: "%f"
+            - name: "result_global_linear_velocity_y"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+            - name: "result_global_linear_velocity_z"
+              expr: "*((float*)($eax + 0x1c))"
+              format: "%f"
+            - name: "result_global_angular_velocity_x"
+              expr: "*((float*)($eax + 0x58))"
+              format: "%f"
+            - name: "result_global_angular_velocity_y"
+              expr: "*((float*)($eax + 0x5c))"
+              format: "%f"
+            - name: "result_global_angular_velocity_z"
+              expr: "*((float*)($eax + 0x60))"
+              format: "%f"
 post-config:
   commands:
     - "continue"
