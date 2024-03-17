@@ -649,6 +649,18 @@ config:
             - name: "result_global_angular_velocity_z"
               expr: "*((float*)($eax + 0x60))"
               format: "%f"
+    - name: "braking_force"
+      points:
+        - locspec: "*0x00501b8c"
+          values:
+            - *handbrake
+            - *local_linear_velocity_z
+            - *brake
+        - locspec: "*0x00501c54"
+          values:
+            - name: "result_front_brake_force"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
