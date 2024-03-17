@@ -661,6 +661,29 @@ config:
             - name: "result_front_brake_force"
               expr: "$st0"
               format: "%f"
+    - name: "wheel_base_grip"
+      points:
+        - locspec: "*0x00501d05"
+          values:
+            - *road_basis_right_x
+            - *road_basis_right_y
+            - *road_basis_right_z
+            - *road_basis_normal_x
+            - *road_basis_normal_y
+            - *road_basis_normal_z
+            - *road_basis_forward_x
+            - *road_basis_forward_y
+            - *road_basis_forward_z
+        - locspec: "*0x00501d45"
+          values:
+            - name: "surface_grip"
+              expr: "$st0"
+              format: "%f"
+        - locspec: "*0x00501d49"
+          values:
+            - name: "result_base_grip"
+              expr: "$st0"
+              format: "%f"
 post-config:
   commands:
     - "continue"
