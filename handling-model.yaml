@@ -55,6 +55,10 @@ config:
               name: "airborne_counter"
               expr: "*((uint16_t*)($eax + 0x1a4))"
               format: "%d"
+            - &speed_xz
+              name: "speed_xz"
+              expr: "*((float*)($eax + 0x4f4))"
+              format: "%f"
         - locspec: "*0x00502f31"
           values:
             - *result_st0
@@ -65,6 +69,10 @@ config:
             - *airborne_counter
             - *local_linear_velocity_x
             - *local_linear_velocity_y
+            - &slip_angle
+              name: "slip_angle"
+              expr: "*((float*)($eax + 0x500))"
+              format: "%f"
             - *local_linear_velocity_z
             - &turn_angle
               name: "turn_angle"
@@ -120,6 +128,8 @@ config:
             - *local_linear_velocity_z
             - *global_angular_velocity_y
             - *mass
+            - *speed_xz
+            - *slip_angle
             - *inertia_inv_y
             - name: "wheel_traction"
               expr: "*((float*)($edx))"
@@ -145,7 +155,7 @@ config:
               format: "%f"
     - name: "wheel_planar_vector"
       points:
-        - locspec: "*0x00501efc"
+        - locspec: "*0x00501951"
           values:
             - *local_linear_velocity_x
             - *local_linear_velocity_y
@@ -154,6 +164,14 @@ config:
             - *mass
             - *inertia_inv_y
             - *airborne_counter
+            - *speed_xz
+        - locspec: "*0x0050197c"
+          values:
+            - name: "angular_velocity_factor"
+              expr: "$st0"
+              format: "%f"
+        - locspec: "*0x00501efc"
+          values:
             - *current_gear
             - name: "wheel_planar_vector_lateral"
               expr: "*((float*)($edx + 0x10))"
@@ -209,6 +227,8 @@ config:
             - *turn_angle
             - *airborne_counter
             - *handbrake
+            - *slip_angle
+            - *speed_xz
         - locspec: "*0x00501268"
           values:
             - *result_st0
@@ -300,16 +320,16 @@ config:
         - locspec: "*0x004ff705"
           values:
             - *edx_road_basis_normal_y
-        - locspec: "*0x004ff85c"
-          values:
-            - name: "road_surface"
-              expr: "$eax"
-              format: "%d"
         - locspec: "*0x004ff815"
           values:
             - name: "result"
               expr: "*((float*)($eax + 0x528))"
               format: "%f"
+        - locspec: "*0x004ff85c"
+          values:
+            - name: "road_surface"
+              expr: "$eax"
+              format: "%d"
     - name: "wheel_downforce_factor"
       points:
         - locspec: "*0x004ffa1a"
@@ -440,10 +460,7 @@ config:
               name: "global_linear_velocity_z"
               expr: "*((float*)($eax + 0x1c))"
               format: "%f"
-            - &slip_angle
-              name: "slip_angle"
-              expr: "*((float*)($eax + 0x500))"
-              format: "%f"
+            - *slip_angle
         - locspec: "*0x005022fd"
           values:
             - name: "result_global_linear_velocity_x"
@@ -506,6 +523,7 @@ config:
         - locspec: "*0x00502de4"
           values:
             - *current_gear
+            - *turn_angle
             - &road_basis_right_x
               name: "road_basis_right_x"
               expr: "*((float*)($eax + 0x148 + 0x0 + 0x0))"
