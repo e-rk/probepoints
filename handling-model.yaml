@@ -3,7 +3,7 @@ pre-config:
     - "target remote :11111"
     - "set pagination off"
 config:
-  timeout: 240
+  timeout: 300
   collect:
     - name: "handling_model_torque_curve"
       points:
@@ -320,16 +320,26 @@ config:
         - locspec: "*0x004ff705"
           values:
             - *edx_road_basis_normal_y
-        - locspec: "*0x004ff815"
-          values:
-            - name: "result"
-              expr: "*((float*)($eax + 0x528))"
-              format: "%f"
         - locspec: "*0x004ff85c"
           values:
             - name: "road_surface"
               expr: "$eax"
               format: "%d"
+        - locspec: "*0x004ff892"
+          values:
+            - name: "surface_value"
+              expr: "$st0"
+              format: "%f"
+        - locspec: "*0x004ff86f"
+          values:
+            - name: "unknown_value"
+              expr: "*((uint32_t*)($eax + 0x4dc))"
+              format: "%d"
+        - locspec: "*0x004ff7e2"
+          values:
+            - name: "result"
+              expr: "$st0"
+              format: "%f"
     - name: "wheel_downforce_factor"
       points:
         - locspec: "*0x004ffa1a"
@@ -352,6 +362,10 @@ config:
               name: "wheel_3_downforce_factor"
               expr: "*((float*)($eax + 0x524))"
               format: "%f"
+            - &brake
+              name: "brake"
+              expr: "*((float*)($eax + 0x54c))"
+              format: "%f"
         - locspec: "*0x004ff9b6"
           force_capture: true
           values:
@@ -360,6 +374,7 @@ config:
             - *wheel_1_downforce_factor
             - *wheel_2_downforce_factor
             - *wheel_3_downforce_factor
+            - *brake
     - name: "wheel_longitudal_acceleration"
       points:
         - locspec: "*0x00500f20"
@@ -388,10 +403,10 @@ config:
             - name: "lateral_grip"
               expr: "*((float*)($eax + 0x4))"
               format: "%f"
-        - locspec: "*0x0050140a"
+        - locspec: "*0x0050106b"
           values:
-            - name: "longitudal_acceleration"
-              expr: "*((float*)($eax))"
+            - name: "longitudal_force"
+              expr: "$st0"
               format: "%f"
     - name: "wheel_force_loss_of_grip"
       points:
@@ -435,10 +450,7 @@ config:
         - locspec: "*0x005022e6"
           values:
             - *throttle
-            - &brake
-              name: "brake"
-              expr: "*((float*)($eax + 0x54c))"
-              format: "%f"
+            - *brake
             - *turn_angle
             - *local_linear_velocity_x
             - *local_linear_velocity_z
@@ -700,6 +712,33 @@ config:
         - locspec: "*0x00501d49"
           values:
             - name: "result_base_grip"
+              expr: "$st0"
+              format: "%f"
+    - name: "handbrake_accumulator"
+      points:
+        - locspec: "*0x00501070"
+          values:
+            - &handbrake_accumulator
+              name: "handbrake_accumulator"
+              expr: "*((uint32_t*)($eax + 0x45c))"
+              format: "%u"
+            - *handbrake
+            - *weather
+        - locspec: "*0x00501109"
+          values:
+            - name: "result_handbrake_accumulator"
+              expr: "*((uint32_t*)($eax + 0x45c))"
+              format: "%u"
+    - name: "handbrake_scaling_function"
+      points:
+        - locspec: "*0x00500ef6"
+          values:
+            - name: "input"
+              expr: "$st0"
+              format: "%f"
+        - locspec: "*0x00500efe"
+          values:
+            - name: "result"
               expr: "$st0"
               format: "%f"
 post-config:
