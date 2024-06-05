@@ -131,6 +131,10 @@ config:
             - *speed_xz
             - *slip_angle
             - *inertia_inv_y
+            - &handbrake_accumulator
+              name: "handbrake_accumulator"
+              expr: "*((uint32_t*)($eax + 0x45c))"
+              format: "%u"
             - name: "wheel_traction"
               expr: "*((float*)($edx))"
               format: "%f"
@@ -143,14 +147,19 @@ config:
             - name: "wheel_is_front"
               expr: "*((uint32_t*)($edx + 0x28))"
               format: "%u"
+            - name: "wheel_downforce"
+              expr: "*((float*)($edx + 0x8))"
+              format: "%f"
             - *turn_angle
             - *airborne_counter
         - locspec: "*0x00501450"
           values:
-            - name: "lateral_force"
+            - &wheel_lateral_force
+              name: "lateral_force"
               expr: "*((float*)($eax + 0x1c))"
               format: "%f"
-            - name: "longitudal_force"
+            - &wheel_longitudal_force
+              name: "longitudal_force"
               expr: "*((float*)($eax + 0x24))"
               format: "%f"
     - name: "wheel_planar_vector"
@@ -215,6 +224,19 @@ config:
             - name: "wheel_is_front"
               expr: "*((uint32_t*)($eax + 0x28))"
               format: "%u"
+        - locspec: "*0x00500f41"
+          values:
+            - name: "wheel_planar_vector_lateral"
+              expr: "*((float*)($eax + 0x10))"
+              format: "%f"
+            - name: "wheel_planar_vector_longitudal"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+        - locspec: "*0x00501229"
+          values:
+            - name: "atan_result"
+              expr: "$st0"
+              format: "%f"
         - locspec: "*0x0050123b"
           values:
             - *current_gear
@@ -537,13 +559,20 @@ config:
             - *weather
             - *slip_angle
             - *brake
+            - *speed_xz
+            - *airborne_counter
+            - *handbrake_accumulator
+            - &some_gear_shift_value
+              name: "some_gear_shift_value"
+              expr: "*((uint16_t*)($eax + 0x458))"
+              format: "%u"
             - &unknown_engine_value
               name: "unknown_engine_value"
               expr: "*((uint8_t*)($eax + 0x454))"
               format: "%u"
             - &unknown_engine_value_2
               name: "unknown_engine_value2"
-              expr: "*((uint8_t*)($eax + 0x456))"
+              expr: "*((uint32_t*)($eax + 0x456))"
               format: "%u"
         - locspec: "*0x005006da"
           values:
@@ -561,13 +590,192 @@ config:
             - name: "result_force"
               expr: "$st0"
               format: "%f"
+    - name: "traction_model_rpm_above_redline"
+      points:
+        - locspec: "*0x004ffa20"
+          values:
+            - *throttle
+            - *rpm
+            - *handbrake
+        - locspec: "*0x004ffa3b"
+          values:
+            - name: "result_rpm_above_redline"
+              expr: "$edx"
+              format: "%u"
+        - locspec: "*0x004ffa97"
+          values:
+            - name: "result_rpm_above_redline"
+              expr: "1"
+              format: "%u"
+        - locspec: "*0x004ffb2e"
+          values:
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+            - name: "result_handbrake"
+              expr: "*((uint8_t*)($eax + 0x455))"
+              format: "%u"
+    - name: "traction_model_target_rpm"
+      points:
+        - locspec: "*0x004ffa20"
+          values:
+            - *throttle
+        - locspec: "*0x004ffc0a"
+          values:
+            - name: "result_target_rpm"
+              expr: "$st0"
+              format: "%f"
+    - name: "traction_model_limit_gear_when_low_velocity"
+      points:
+        - locspec: "*0x004fff33"
+          values:
+            - *local_linear_velocity_z
+            - *current_gear
+        - locspec: "*0x004fff3b"
+          values:
+            - name: "result_current_gear"
+              expr: "*((uint8_t*)($eax + 0x453))"
+              format: "%u"
+    - name: "traction_model_rpm_from_wheels"
+      points:
+        - locspec: "*0x004fff3b"
+          values:
+            - *local_linear_velocity_z
+            - *current_gear
+        - locspec: "*0x004fff70"
+          values:
+            - name: "result_rpm_from_wheels"
+              expr: "$st0"
+              format: "%f"
+    - name: "traction_model_force"
+      points:
+        - locspec: "*0x004fffc3"
+          values:
+            - *throttle
+            - *rpm
+            - *handbrake
+            - *local_linear_velocity_z
+            - *current_gear
+            - *weather
+            - *slip_angle
+            - *brake
+            - *speed_xz
+            - *airborne_counter
+            - *handbrake_accumulator
+            - *some_gear_shift_value
+            - &target_rpm
+              name: "target_rpm"
+              expr: "*((uint32_t*)($ebp - 0x50))"
+              format: "%u"
+            - &traction_model_rpm_above_redline
+              name: "rpm_above_redline"
+              expr: "*((uint32_t*)($ebp - 0x4c))"
+              format: "%u"
+            - &traction_model_drag
+              name: "drag"
+              expr: "*((float*)($ebp - 0x20))"
+              format: "%f"
+        - locspec: "*0x005005e7"
+          values:
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+            - name: "result_handbrake_accumulator"
+              expr: "*((uint32_t*)($eax + 0x45c))"
+              format: "%u"
+            - name: "result_force"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+            - name: "result_handbrake"
+              expr: "*((uint8_t*)($eax + 0x455))"
+              format: "%u"
+    - name: "traction_model_low_engine_rpm"
+      points:
+        - locspec: "*0x005005e7"
+          values:
+            - *rpm
+            - *current_gear
+            - name: "force"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+        - locspec: "*0x00500685"
+          force_capture: true
+          values:
+            - name: "result_force"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+        - locspec: "*0x005006d4"
+          force_capture: true
+          values:
+            - name: "result_force"
+              expr: "$st0"
+              format: "%f"
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+    - name: "traction_model_airborne_target_rpm"
+      points:
+        - locspec: "*0x004ffcab"
+          values:
+            - *target_rpm
+            - *airborne_counter
+        - locspec: "*0x004ffcbe"
+          values:
+            - name: "result_target_rpm"
+              expr: "*((uint32_t*)($ebp - 0x50))"
+              format: "%u"
+    - name: "traction_model_rpm_adjust"
+      points:
+        - locspec: "*0x004ffcc1"
+          values:
+            - *target_rpm
+            - *rpm
+            - *unknown_engine_value
+            - *unknown_engine_value_2
+            - *brake
+            - *throttle
+            - *some_gear_shift_value
+            - *traction_model_rpm_above_redline
+            - *current_gear
+            - &next_gear
+              name: "next_gear"
+              expr: "*((uint8_t*)($eax + 0x44e))"
+              format: "%u"
+            - &traction_model_force
+              name: "force"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+        - locspec: "*0x004ffeee"
+          values:
+            - name: "result_rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+    - name: "traction_model_postprocess"
+      points:
+        - locspec: "*0x005006da"
+          values:
+            - *target_rpm
+            - *airborne_counter
+            - *traction_model_drag
+            - *local_linear_velocity_z
+            - name: "force"
+              expr: "*((float*)($ebp - 0x44))"
+              format: "%f"
+        - locspec: "*0x00500744"
+          values:
+            - name: "result_force"
+              expr: "$st0"
+              format: "%f"
     - name: "longitudal_drag_coefficient"
       points:
         - locspec: "*0x004fd54f"
           values:
             - name: "longitudal_drag_coefficient"
               expr: "*((float*)($eax + 0x4d8))"
-              format: "%1.20f"
+              format: "%.20f"
     - name: "damp_velocity_when_neutral"
       points:
         - locspec: "*0x00502de4"
@@ -723,10 +931,7 @@ config:
       points:
         - locspec: "*0x00501070"
           values:
-            - &handbrake_accumulator
-              name: "handbrake_accumulator"
-              expr: "*((uint32_t*)($eax + 0x45c))"
-              format: "%u"
+            - *handbrake_accumulator
             - *handbrake
             - *weather
         - locspec: "*0x00501109"
@@ -745,6 +950,83 @@ config:
           values:
             - name: "result"
               expr: "$st0"
+              format: "%f"
+    - name: "prevent_moving_sideways"
+      points:
+        - locspec: "*0x005027c0"
+          values:
+            - *throttle
+            - *brake
+            - *turn_angle
+            - *road_basis_right_x
+            - *road_basis_right_y
+            - *road_basis_right_z
+            - *road_basis_normal_x
+            - *road_basis_normal_y
+            - *road_basis_normal_z
+            - *road_basis_forward_x
+            - *road_basis_forward_y
+            - *road_basis_forward_z
+            - *global_linear_velocity_x
+            - *global_linear_velocity_y
+            - *global_linear_velocity_z
+        - locspec: "*0x0050212e"
+          values:
+            - name: "result_global_linear_velocity_x"
+              expr: "*((float*)($eax + 0x14))"
+              format: "%f"
+            - name: "result_global_linear_velocity_y"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+            - name: "result_global_linear_velocity_z"
+              expr: "*((float*)($eax + 0x1c))"
+              format: "%f"
+    - name: "handbrake_loss"
+      points:
+        - locspec: "*0x005008c0"
+          values:
+            - *handbrake_accumulator
+            - *current_gear
+            - *weather
+            - name: "wheel_planar_vector_lateral"
+              expr: "*((float*)($edx + 0x10))"
+              format: "%f"
+            - name: "wheel_planar_vector_longitudal"
+              expr: "*((float*)($edx + 0x18))"
+              format: "%f"
+            - name: "wheel_traction"
+              expr: "*((float*)($edx))"
+              format: "%f"
+            - name: "wheel_downforce"
+              expr: "*((float*)($edx + 0x8))"
+              format: "%f"
+            - name: "lateral_grip"
+              expr: "*((float*)($edx + 0x4))"
+              format: "%f"
+        - locspec: "*0x00500a9e"
+          values:
+            - *wheel_lateral_force
+            - *wheel_longitudal_force
+    - name: "vector_rotate_y"
+      points: 
+        - locspec: "*0x00500f6e"
+          values:
+            - name: "wheel_steering"
+              expr: "*((float*)($eax + 0xc))"
+              format: "%f"
+            - name: "wheel_planar_vector_lateral"
+              expr: "*((float*)($eax + 0x10))"
+              format: "%f"
+            - name: "wheel_planar_vector_longitudal"
+              expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+        - locspec: "*0x00500fa1"
+          values:
+            - name: "result_wheel_planar_vector_lateral"
+              expr: "*((float*)($eax + 0x10))"
+              format: "%f"
+            - name: "result_wheel_planar_vector_longitudal"
+              expr: "*((float*)($eax + 0x18))"
               format: "%f"
 post-config:
   commands:
