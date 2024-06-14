@@ -152,6 +152,14 @@ config:
               format: "%f"
             - *turn_angle
             - *airborne_counter
+            - &rpm
+              name: "rpm"
+              expr: "*((uint32_t*)($eax + 0x4e0))"
+              format: "%u"
+            - &road_surface_type
+              name: "road_surface"
+              expr: "*((uint32_t*)($eax + 0x1d8))"
+              format: "%u"
         - locspec: "*0x00501450"
           values:
             - &wheel_lateral_force
@@ -451,14 +459,8 @@ config:
             - *local_linear_velocity_z
             - *current_gear
             - *throttle
-            - &rpm
-              name: "rpm"
-              expr: "*((uint32_t*)($eax + 0x4e0))"
-              format: "%u"
-            - &road_surface_type
-              name: "road_surface"
-              expr: "*((uint32_t*)($eax + 0x1d8))"
-              format: "%u"
+            - *rpm
+            - *road_surface_type
         - locspec: "*0x00500e4d"
           values:
             - name: "result_lateral_force"
@@ -1027,6 +1029,23 @@ config:
               format: "%f"
             - name: "result_wheel_planar_vector_longitudal"
               expr: "*((float*)($eax + 0x18))"
+              format: "%f"
+    - name: "g_transfer_damp"
+      points:
+        - locspec: "*0x00501df1"
+          values:
+            - &g_transfer
+              name: "g_transfer"
+              expr: "*((float*)($eax + 0x50c))"
+              format: "%f"
+            - name: "unknown_bool"
+              expr: "*((uint32_t*)($eax + 0x4e4))"
+              format: "%u"
+            - *weather
+        - locspec: "*0x00501df9"
+          values:
+            - name: "result_g_transfer"
+              expr: "*((float*)($eax + 0x50c))"
               format: "%f"
 post-config:
   commands:
