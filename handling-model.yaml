@@ -537,16 +537,20 @@ config:
               format: "%f"
         - locspec: "*0x00502351"
           values:
-            - name: "result_global_linear_velocity_x"
+            - &result_global_linear_velocity_x
+              name: "result_global_linear_velocity_x"
               expr: "*((float*)($eax + 0x14))"
               format: "%f"
-            - name: "result_global_linear_velocity_y"
+            - &result_global_linear_velocity_y
+              name: "result_global_linear_velocity_y"
               expr: "*((float*)($eax + 0x18))"
               format: "%f"
-            - name: "result_global_linear_velocity_z"
+            - &result_global_linear_velocity_z
+              name: "result_global_linear_velocity_z"
               expr: "*((float*)($eax + 0x1c))"
               format: "%f"
-            - name: "result_global_angular_velocity_y"
+            - &result_global_angular_velocity_y
+              name: "result_global_angular_velocity_y"
               expr: "*((float*)($eax + 0x5c))"
               format: "%f"
     - name: "traction_model"
@@ -578,13 +582,16 @@ config:
               format: "%u"
         - locspec: "*0x005006da"
           values:
-            - name: "result_gear"
+            - &result_gear
+              name: "result_gear"
               expr: "*((uint8_t*)($eax + 0x453))"
               format: "%u"
-            - name: "result_rpm"
+            - &result_rpm
+              name: "result_rpm"
               expr: "*((uint32_t*)($eax + 0x4e0))"
               format: "%u"
-            - name: "result_handbrake"
+            - &result_handbrake
+              name: "result_handbrake"
               expr: "*((uint8_t*)($eax + 0x455))"
               format: "%u"
         - locspec: "*0x00500744"
@@ -842,13 +849,15 @@ config:
             - name: "steering_input"
               expr: "*((int32_t*)($eax + 0x460))"
               format: "%d"
-            - name: "current_steering"
-              expr: "*((int32_t*)($eax + 0x464))"
+            - &current_steering
+              name: "current_steering"
+              expr: "*((int*)($eax + 0x464))"
               format: "%d"
         - locspec: "*0x004ff295"
           values:
-            - name: "result_current_steering"
-              expr: "*((int32_t*)($eax + 0x464))"
+            - &result_current_steering
+              name: "result_current_steering"
+              expr: "*((int*)($eax + 0x464))"
               format: "%d"
     - name: "near_stop_deceleration"
       points:
@@ -885,13 +894,13 @@ config:
             - name: "result_global_linear_velocity_z"
               expr: "*((float*)($eax + 0x1c))"
               format: "%f"
-            - name: "result_global_angular_velocity_x"
+            - &result_global_angular_velocity_x
+              name: "result_global_angular_velocity_x"
               expr: "*((float*)($eax + 0x58))"
               format: "%f"
-            - name: "result_global_angular_velocity_y"
-              expr: "*((float*)($eax + 0x5c))"
-              format: "%f"
-            - name: "result_global_angular_velocity_z"
+            - *result_global_angular_velocity_y
+            - &result_global_angular_velocity_z
+              name: "result_global_angular_velocity_z"
               expr: "*((float*)($eax + 0x60))"
               format: "%f"
     - name: "braking_force"
@@ -1046,6 +1055,142 @@ config:
           values:
             - name: "result_g_transfer"
               expr: "*((float*)($eax + 0x50c))"
+              format: "%f"
+    - name: "handling_full"
+      points:
+        - locspec: "*0x00501977"
+          values:
+            # Basis
+            - *road_basis_right_x
+            - *road_basis_right_y
+            - *road_basis_right_z
+            - *road_basis_normal_x
+            - *road_basis_normal_y
+            - *road_basis_normal_z
+            - *road_basis_forward_x
+            - *road_basis_forward_y
+            - *road_basis_forward_z
+            # Angular and linear velocities
+            - *global_linear_velocity_x
+            - *global_linear_velocity_y
+            - *global_linear_velocity_z
+            - *global_angular_velocity_x
+            - *global_angular_velocity_y
+            - *global_angular_velocity_z
+            - *speed_xz
+            # Constants
+            - *mass
+            - *inertia_inv_y
+            # Other values
+            - *airborne_counter
+            - *g_transfer
+            # Integrated inputs
+            - *throttle
+            - *current_steering
+            - *brake
+            - *current_gear
+            - *handbrake_accumulator
+            # User inputs
+            - *handbrake
+            - *next_gear
+            - &throttle_input
+              name: "throttle_input"
+              expr: "*((uint8_t*)($eax + 0x44c))"
+              format: "%u"
+            - &brake_input
+              name: "brake_input"
+              expr: "*((uint8_t*)($eax + 0x44d))"
+              format: "%u"
+            - &steering_input
+              name: "steering_input"
+              expr: "*((char*)($eax + 0x460))"
+              format: "%d"
+            # Engine
+            - *rpm
+            # Body and wheel positions
+            - *weather
+            - *road_surface_type
+            - &wheel_0_surface_type
+              name: "wheel_0_surface_type"
+              expr: "*((uint32_t*)($eax + 0x2e8 + 0 * 0x50 + 0x44)) ? *((uint8_t*)(*((uint32_t*)($eax + 0x2e8 + 0 * 0x50 + 0x44)) + 0x8)) : 0"
+              format: "%u"
+            - &wheel_1_surface_type
+              name: "wheel_1_surface_type"
+              expr: "*((uint32_t*)($eax + 0x2e8 + 1 * 0x50 + 0x44)) ? *((uint8_t*)(*((uint32_t*)($eax + 0x2e8 + 1 * 0x50 + 0x44)) + 0x8)) : 0"
+              format: "%u"
+            - &wheel_2_surface_type
+              name: "wheel_2_surface_type"
+              expr: "*((uint32_t*)($eax + 0x2e8 + 2 * 0x50 + 0x44)) ? *((uint8_t*)(*((uint32_t*)($eax + 0x2e8 + 2 * 0x50 + 0x44)) + 0x8)) : 0"
+              format: "%u"
+            - &wheel_3_surface_type
+              name: "wheel_3_surface_type"
+              expr: "*((uint32_t*)($eax + 0x2e8 + 3 * 0x50 + 0x44)) ? *((uint8_t*)(*((uint32_t*)($eax + 0x2e8 + 3 * 0x50 + 0x44)) + 0x8)) : 0"
+              format: "%u"
+            - *some_gear_shift_value
+            - *unknown_engine_value_2
+            - &basis_right_x
+              name: "basis_right_x"
+              expr: "*((float*)($eax + 0x34 + 0x0 + 0x0))"
+              format: "%f"
+            - &basis_right_y
+              name: "basis_right_y"
+              expr: "*((float*)($eax + 0x34 + 0x0 + 0x4))"
+              format: "%f"
+            - &basis_right_z
+              name: "basis_right_z"
+              expr: "*((float*)($eax + 0x34 + 0x0 + 0x8))"
+              format: "%f"
+            - &basis_normal_x
+              name: "basis_normal_x"
+              expr: "*((float*)($eax + 0x34 + 0xc + 0x0))"
+              format: "%f"
+            - &basis_normal_y
+              name: "basis_normal_y"
+              expr: "*((float*)($eax + 0x34 + 0xc + 0x4))"
+              format: "%f"
+            - &basis_normal_z
+              name: "basis_normal_z"
+              expr: "*((float*)($eax + 0x34 + 0xc + 0x8))"
+              format: "%f"
+            - &basis_forward_x
+              name: "basis_forward_x"
+              expr: "*((float*)($eax + 0x34 + 0x18 + 0x0))"
+              format: "%f"
+            - &basis_forward_y
+              name: "basis_forward_y"
+              expr: "*((float*)($eax + 0x34 + 0x18 + 0x4))"
+              format: "%f"
+            - &basis_forward_z
+              name: "basis_forward_z"
+              expr: "*((float*)($eax + 0x34 + 0x18 + 0x8))"
+              format: "%f"
+        - locspec: "*0x005025e7"
+          values:
+            - *result_gear
+            - *result_rpm
+            - *result_handbrake
+            - *result_global_linear_velocity_x
+            - *result_global_linear_velocity_y
+            - *result_global_linear_velocity_z
+            - *result_global_angular_velocity_x
+            - *result_global_angular_velocity_y
+            - *result_global_angular_velocity_z
+            - *result_current_steering
+            - &result_some_gear_shift_value
+              name: "result_some_gear_shift_value"
+              expr: "*((uint16_t*)($eax + 0x458))"
+              format: "%u"
+            - &result_unknown_engine_value_2
+              name: "result_unknown_engine_value2"
+              expr: "*((uint32_t*)($eax + 0x456))"
+              format: "%u"
+            - &result_throttle
+              name: "result_throttle"
+              expr: "*((float*)($eax + 0x550))"
+              format: "%f"
+            - &result_brake
+              name: "result_brake"
+              expr: "*((float*)($eax + 0x54c))"
               format: "%f"
 post-config:
   commands:
