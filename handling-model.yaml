@@ -1196,6 +1196,127 @@ config:
                       name: "result_brake"
                       expr: "*((float*)($eax + 0x54c))"
                       format: "%f"
+        - name: "heli_camera_position"
+          points:
+              - locspec: "*0x0043ee8a"
+                values:
+                    - &camera_factor
+                      name: "camera_factor"
+                      expr: "*((float*)($eax + 0x100))"
+                      format: "%f"
+                    - &unknown_camera_value
+                      name: "unknown_camera_value"
+                      expr: "*((float*)($eax + 0xe8))"
+                      format: "%f"
+                    - &interpolation_factor
+                      name: "interpolation_factor"
+                      expr: "*((float*)($eax + 0xfc))"
+                      format: "%f"
+                    - &global_camera_offset_z
+                      name: "global_camera_offset_z"
+                      expr: "*((float*)($eax + 0x20 + 0x8))"
+                      format: "%f"
+                    - &global_camera_offset_y
+                      name: "global_camera_offset_y"
+                      expr: "*((float*)($eax + 0x20 + 0x4))"
+                      format: "%f"
+                    - &global_camera_offset_x
+                      name: "global_camera_offset_x"
+                      expr: "*((float*)($eax + 0x20))"
+                      format: "%f"
+              - locspec: "*0x0043eee9"
+                values:
+                    - &local_offset_x
+                      name: "local_offset_x"
+                      expr: "*((float*)($ebp - 0x44))"
+                      format: "%f"
+                    - &local_offset_y
+                      name: "local_offset_y"
+                      expr: "*((float*)($ebp - 0x40))"
+                      format: "%f"
+                    - &local_offset_z
+                      name: "local_offset_z"
+                      expr: "*((float*)($ebp - 0x3c))"
+                      format: "%f"
+                    - &orientation_to_ground_y
+                      name: "orientation_to_ground_y"
+                      expr: "*((float*)($eax + 0x7c + 0x4))"
+                      format: "%f"
+                    - &global_position_x
+                      name: "global_position_x"
+                      expr: "*((float*)($eax + 0x8))"
+                      format: "%f"
+                    - &global_position_y
+                      name: "global_position_y"
+                      expr: "*((float*)($eax + 0x8 + 0x4))"
+                      format: "%f"
+                    - &global_position_z
+                      name: "global_position_z"
+                      expr: "*((float*)($eax + 0x8 + 0x8))"
+                      format: "%f"
+                    - *local_linear_velocity_z
+                    - *local_linear_velocity_y
+                    - *local_linear_velocity_x
+                    - *basis_right_x
+                    - *basis_right_y
+                    - *basis_right_z
+                    - *basis_normal_x
+                    - *basis_normal_y
+                    - *basis_normal_z
+                    - *basis_forward_x
+                    - *basis_forward_y
+                    - *basis_forward_z
+                    - *local_linear_acceleration_z
+              - locspec: "*0x0043f00d"
+                values:
+                    - &turn_camera
+                      name: "turn_camera"
+                      expr: "*((uint32_t*)($eax + 0x00661968))"
+                      format: "%u"
+                    - &stiff_camera
+                      name: "stiff_camera"
+                      expr: "*((uint32_t*)($eax * 8 + 0x0065a9d4))"
+                      format: "%u"
+              - locspec: "*0x0043f2a7"
+                values:
+                    - &global_camera_position_z
+                      name: "global_camera_position_z"
+                      expr: "*((float*)($ecx + 0x8))"
+                      format: "%f"
+                    - &global_camera_position_y
+                      name: "global_camera_position_y"
+                      expr: "*((float*)($ecx + 0x4))"
+                      format: "%f"
+                    - &global_camera_position_x
+                      name: "global_camera_position_x"
+                      expr: "*((float*)($ecx))"
+                      format: "%f"
+              - locspec: "*0x0043f2b2"
+                values:
+                    - &result_global_camera_position_z
+                      name: "result_global_camera_position_z"
+                      expr: "*((float*)($ecx + 0x8))"
+                      format: "%f"
+                    - &result_global_camera_position_y
+                      name: "result_global_camera_position_y"
+                      expr: "*((float*)($ecx + 0x4))"
+                      format: "%f"
+                    - &result_global_camera_position_x
+                      name: "result_global_camera_position_x"
+                      expr: "*((float*)($ecx))"
+                      format: "%f"
+                    - &finale_local_offset_x
+                      name: "finale_local_offset_x"
+                      expr: "*((float*)($ebp - 0x44))"
+                      format: "%f"
+                    - &finale_local_offset_y
+                      name: "finale_local_offset_y"
+                      expr: "*((float*)($ebp - 0x40))"
+                      format: "%f"
+                    - &finale_local_offset_z
+                      name: "finale_local_offset_z"
+                      expr: "*((float*)($ebp - 0x3c))"
+                      format: "%f"
 post-config:
     commands:
         - "continue"
