@@ -1343,7 +1343,7 @@ config:
                       expr: "*((short*)($edx + 0x5a))"
                       format: "%d"
                     - name: "unknown2"
-                      expr: "*((int*)($edx + 0x5c))"
+                      expr: "*((short*)($edx + 0x5c))"
                       format: "%d"
                     - name: "unknown3"
                       expr: "*((int*)($edx + 0x58))"
@@ -1365,10 +1365,10 @@ config:
                     - name: "detuneval"
                       expr: "$eax"
                       format: "%d"
-              - locspec: "*0x0054b188"
+              - locspec: "*0x0054b17c"
                 values:
                     - name: "result"
-                      expr: "$edx"
+                      expr: "*((short*)($edx + 0x5e))"
                       format: "%d"
               - locspec: "*0x0042f8c1"
                 values:
