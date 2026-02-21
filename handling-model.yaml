@@ -1399,6 +1399,71 @@ config:
                     - name: "result"
                       expr: "$edx"
                       format: "%d"
+        - name: "apply_collision_velocities"
+          points:
+              - locspec: "*0x0045ab27"
+                values:
+                    # Basis
+                    - *basis_right_x
+                    - *basis_right_y
+                    - *basis_right_z
+                    - *basis_normal_x
+                    - *basis_normal_y
+                    - *basis_normal_z
+                    - *basis_forward_x
+                    - *basis_forward_y
+                    - *basis_forward_z
+                    - *global_linear_velocity_x
+                    - *global_linear_velocity_y
+                    - *global_linear_velocity_z
+                    - *global_angular_velocity_x
+                    - *global_angular_velocity_y
+                    - *global_angular_velocity_z
+                    - &inertia_inv_x
+                      name: "inertia_inv_x"
+                      expr: "*((float*)($eax + 0x70))"
+                      format: "%f"
+                    - *inertia_inv_y
+                    - &inertia_inv_z
+                      name: "inertia_inv_z"
+                      expr: "*((float*)($eax + 0x78))"
+                      format: "%f"
+                    - *mass
+                    - name: "momentum_x"
+                      expr: "*((float*)($ebp + 0x18 + 0x0))"
+                      format: "%f"
+                    - name: "momentum_y"
+                      expr: "*((float*)($ebp + 0x18 + 0x4))"
+                      format: "%f"
+                    - name: "momentum_z"
+                      expr: "*((float*)($ebp + 0x18 + 0x8))"
+                      format: "%f"
+                    - name: "radius_x"
+                      expr: "*((float*)($ebp + 0x18 + 0xc))"
+                      format: "%f"
+                    - name: "radius_y"
+                      expr: "*((float*)($ebp + 0x18 + 0x10))"
+                      format: "%f"
+                    - name: "radius_z"
+                      expr: "*((float*)($ebp + 0x18 + 0x14))"
+                      format: "%f"
+                    - name: "ratio"
+                      expr: "*((float*)($ebp + 0x18 + 0x18))"
+                      format: "%f"
+                    - name: "maybe_friction"
+                      expr: "*((float*)($ebp + 0x18 + 0x1c))"
+                      format: "%f"
+              - locspec: "*0x0045b3ce"
+                values:
+                    - *result_global_linear_velocity_x
+                    - *result_global_linear_velocity_y
+                    - *result_global_linear_velocity_z
+                    - *result_global_angular_velocity_x
+                    - *result_global_angular_velocity_y
+                    - *result_global_angular_velocity_z
+                    - name: "result"
+                      expr: "$st0"
+                      format: "%f"
 post-config:
     commands:
         - "continue"
