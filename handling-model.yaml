@@ -1375,6 +1375,30 @@ config:
                     - name: "dummy"
                       expr: "$eax"
                       format: "%d"
+        - name: "volume_calculate"
+          points:
+              - locspec: "*0x005666c0"
+                values:
+                    - name: "some_value_from_bnk1"
+                      expr: "*((int*)($ecx + 0x50))"
+                      format: "%d"
+                    - name: "field_0x29"
+                      expr: "*((int*)($ecx + 0x29))"
+                      format: "%d"
+                    - name: "some_value_from_bnk2"
+                      expr: "*((int*)($ecx + 0x24))"
+                      format: "%d"
+                    - name: "unknown_global"
+                      expr: "*((int*)(0x009ef36e))"
+                      format: "%d"
+                    - name: "first_result"
+                      expr: "*((int*)($ecx + 0x2d))"
+                      format: "%d"
+              - locspec: "*0x0054ade2"
+                values:
+                    - name: "result"
+                      expr: "$edx"
+                      format: "%d"
 post-config:
     commands:
         - "continue"
